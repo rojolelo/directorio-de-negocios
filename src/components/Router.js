@@ -24,8 +24,10 @@ class Router extends Component {
         let separacion = [];
         let subSeparacion = [];
 
+        const objetosPorPagina = 10;
+
         while (prevState.length >= 1) {
-            subSeparacion = prevState.splice(0, 5)
+            subSeparacion = prevState.splice(0, objetosPorPagina)
             separacion.push(subSeparacion);
 
         }
@@ -38,9 +40,18 @@ class Router extends Component {
     }
 
     paginas = (lista) => {
+        //LISTA es el State separado.
 
         if (!Boolean(lista)) return null;
         const paginas = [...lista];
+
+        if (paginas.length === 0) return (
+
+            <Route exact path={"/"} render={() => {
+                return (<BotonAdd />)
+            }} />
+
+        );
 
         return (
             <React.Fragment>
@@ -53,7 +64,7 @@ class Router extends Component {
                             i += 1;
                         };
                         return (
-                            <Route exact path={`/${i}`} render={() => {
+                            <Route key={i} exact path={`/${i}`} render={() => {
                                 return (
                                     <React.Fragment>
                                         <BotonAdd />
@@ -74,12 +85,16 @@ class Router extends Component {
             JSON.stringify(this.state.lista));
         localStorage.setItem("datosPorModerar",
             JSON.stringify(this.state.listaPorModerar));
+
     }
 
     componentDidMount() {
+
+
+
         const listaLocal = localStorage.getItem("datos");
         if (listaLocal) {
-            //ACTUALIZA STATE Y SE LANZA ACTUALIZACIONPORPAGINAS()
+
             this.setState((prevState, props) => ({
                 lista: JSON.parse(listaLocal)
             }), this.separacionPorPaginas(JSON.parse(listaLocal)))
@@ -143,7 +158,7 @@ class Router extends Component {
 
                     <Switch>
 
-                        {this.paginas(this.state.listaSeparada)}
+
 
                         <Route exact path={"/add"} render={() => {
                             //AÑADIR POST
@@ -152,12 +167,16 @@ class Router extends Component {
                             )
                         }} />
 
+
+
                         <Route exact path={"/listadomoderacion"} render={() => {
                             //MODERACION
                             return (
                                 <Moderacion objeto={this.state.listaPorModerar} aceptar={this.aceptar} borrar={this.borrar} />
                             )
                         }} />
+
+                        {this.paginas(this.state.listaSeparada)}
 
 
 
