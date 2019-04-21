@@ -16,7 +16,7 @@ class Navegacion extends Component {
         if (!Boolean(paginaActual)) return null;
         if (!Boolean(paginaFinal)) return null;
 
-        console.log(paginaActual, paginaFinal);
+
 
         let paginaAnterior;
         let paginaSiguiente;
@@ -32,19 +32,21 @@ class Navegacion extends Component {
 
         if (paginaActual === paginaFinal) paginaSiguiente = paginaActual;
 
-        console.log(paginaAnterior, paginaSiguiente)
+        if (paginaActual === paginaFinal && paginaFinal === 1) paginaSiguiente = "";
+
+
 
         return (
-            <ul class="nav justify-content-center">
-                <li class="nav-item">
+            <ul className="nav nav-pills justify-content-center">
+                <li className="nav-item">
                     <Link to={`/${paginaAnterior}`} className="nav-link">
                         Anterior
                 </Link>
                 </li>
-                <li class="nav-item">
+                <li className="nav-item">
                     <span className="nav-link">{paginaActual}</span>
                 </li>
-                <li class="nav-item">
+                <li className="nav-item">
                     <Link to={`/${paginaSiguiente}`} className="nav-link">
                         Siguiente
                 </Link>
