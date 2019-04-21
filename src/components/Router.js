@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Header from "./Header";
-import Footer from "./Footer"
-import Listado from "./Listado"
-import Add from "./Add"
+import Footer from "./Footer";
+import Listado from "./Listado";
+import Add from "./Add";
 import BotonAdd from './BotonAdd';
-import Moderacion from "./Moderacion"
+import Moderacion from "./Moderacion";
+import Navegacion from "./Navegacion";
 
 class Router extends Component {
     state = {
         lista: [],
         listaPorModerar: [],
+        listaSeparada: [],
     }
 
     //PENDIENTE SEPARACION POR PAGINAS
@@ -23,28 +25,40 @@ class Router extends Component {
         let subSeparacion = [];
 
         while (prevState.length >= 1) {
-            subSeparacion = [prevState.splice(0, 5)]
+            subSeparacion = prevState.splice(0, 5)
             separacion.push(subSeparacion);
 
         }
-
-        console.log(separacion)
+        if (separacion.length !== 0) {
+            this.setState({
+                listaSeparada: separacion
+            })
+        };
 
     }
 
-    paginas = () => {
-        const paginas = [];
+    paginas = (lista) => {
+
+        if (!Boolean(lista)) return null;
+        const paginas = [...lista];
+
         return (
             <React.Fragment>
                 {
                     paginas.map((pagina, i) => {
+
+                        if (i === 0) {
+                            i = ""
+                        } else {
+                            i += 1;
+                        };
                         return (
                             <Route exact path={`/${i}`} render={() => {
-                                //RUTA PRINCIPAL  y EXACTA
                                 return (
                                     <React.Fragment>
                                         <BotonAdd />
-                                        <Listado lista={paginas[i]} />
+                                        <Listado lista={pagina} />
+                                        <Navegacion paginaActual={i} paginaFinal={paginas.length} />
                                     </React.Fragment>
                                 )
                             }} />
@@ -65,6 +79,7 @@ class Router extends Component {
     componentDidMount() {
         const listaLocal = localStorage.getItem("datos");
         if (listaLocal) {
+            //ACTUALIZA STATE Y SE LANZA ACTUALIZACIONPORPAGINAS()
             this.setState((prevState, props) => ({
                 lista: JSON.parse(listaLocal)
             }), this.separacionPorPaginas(JSON.parse(listaLocal)))
@@ -127,15 +142,8 @@ class Router extends Component {
 
 
                     <Switch>
-                        <Route exact path={"/"} render={() => {
-                            //RUTA PRINCIPAL  y EXACTA
-                            return (
-                                <React.Fragment>
-                                    <BotonAdd />
-                                    <Listado lista={this.state.lista} />
-                                </React.Fragment>
-                            )
-                        }} />
+
+                        {this.paginas(this.state.listaSeparada)}
 
                         <Route exact path={"/add"} render={() => {
                             //AÑADIR POST
@@ -150,6 +158,9 @@ class Router extends Component {
                                 <Moderacion objeto={this.state.listaPorModerar} aceptar={this.aceptar} borrar={this.borrar} />
                             )
                         }} />
+
+
+
                     </Switch>
 
                     <Footer />

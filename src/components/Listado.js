@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ObjetoLista from "./Listado/ObjetoLista";
 
+
 class Listado extends Component {
     laLista = () => {
 
@@ -8,6 +9,7 @@ class Listado extends Component {
 
         const listaDeObjetos = this.props.lista;
 
+        if (!Boolean(listaDeObjetos)) return null;
 
         if (listaDeObjetos.length === 0) return null;
         return (
