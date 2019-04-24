@@ -44,7 +44,7 @@ class Moderacion extends Component {
         if (this.state.clave !== "1234") return (
             <React.Fragment>
                 <h2>Inserte Clave</h2>
-                <input type="password" placeholder="password" onChange={e => {
+                <input type="text" placeholder="password" onChange={e => {
                     this.setState({
                         clave: e.target.value
                     })
