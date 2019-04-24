@@ -143,7 +143,7 @@ class Router extends Component {
     }
 
     add = (datos) => {
-        console.log("Add ejecutado")
+
         this.setState((prevState, props) => ({
             listaPorModerar: [...prevState.listaPorModerar, datos]
         }))
@@ -153,6 +153,8 @@ class Router extends Component {
     render() {
 
         const separacion = this.separacionPorPaginas(this.state.lista)
+
+
 
 
         return (
@@ -181,7 +183,9 @@ class Router extends Component {
                             )
                         }} />
 
-                        {this.paginas(separacion)}
+                        {
+                            (separacion) ? (separacion.length === 0 ? <BotonAdd /> : this.paginas(separacion)) : <BotonAdd />
+                        }
 
 
 
