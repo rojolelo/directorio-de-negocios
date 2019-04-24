@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import ObjetoListaMod from './Listado/ObjetoListaMod';
 
 class Moderacion extends Component {
-    state = {}
+    state = {
+        clave: ""
+    }
 
     listaPorModerar = () => {
         const lista = this.props.objeto;
@@ -38,15 +40,28 @@ class Moderacion extends Component {
     }
 
     render() {
+
+        if (this.state.clave !== "1234") return (
+            <React.Fragment>
+                <h2>Inserte Clave</h2>
+                <input type="password" placeholder="password" onChange={e => {
+                    this.setState({
+                        clave: e.target.value
+                    })
+                }} />
+            </React.Fragment>)
+
         return (
             <React.Fragment>
                 <h2 className="titulo-moderacion">Moderacion</h2>
+
+
                 <table className="table table-bordered table-striped">
                     <tbody>
                         {this.listaPorModerar()}
                     </tbody>
                 </table>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }
