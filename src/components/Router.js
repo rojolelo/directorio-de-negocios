@@ -151,7 +151,7 @@ class Router extends Component {
 
     render() {
         return (
-            <BrowserRouter>
+            <BrowserRouter basename={process.env.PUBLIC_URL} >
                 <div className="container">
                     <Header />
 
