@@ -13,7 +13,6 @@ class Router extends Component {
     state = {
         lista: [],
         listaPorModerar: [],
-        listaSeparada: [],
     }
 
     //PENDIENTE SEPARACION POR PAGINAS
@@ -21,8 +20,10 @@ class Router extends Component {
     separacionPorPaginas = (datos) => {
         let prevState = [...datos]
 
+
         let separacion = [];
         let subSeparacion = [];
+
 
         const objetosPorPagina = 10;
 
@@ -31,10 +32,10 @@ class Router extends Component {
             separacion.push(subSeparacion);
 
         }
+
+
         if (separacion.length !== 0) {
-            this.setState({
-                listaSeparada: separacion
-            })
+            return separacion
         };
 
     }
@@ -93,18 +94,18 @@ class Router extends Component {
 
 
         const listaLocal = localStorage.getItem("datos");
-        if (listaLocal) {
+        const listaPorModerarLocal = localStorage.getItem("datosPorModerar");
+
+        if (listaLocal && listaPorModerarLocal) {
 
             this.setState((prevState, props) => ({
-                lista: JSON.parse(listaLocal)
-            }), this.separacionPorPaginas(JSON.parse(listaLocal)))
-        };
-        const listaPorModerarLocal = localStorage.getItem("datosPorModerar");
-        if (listaPorModerarLocal) {
-            this.setState((prevState, props) => ({
+                lista: JSON.parse(listaLocal),
                 listaPorModerar: JSON.parse(listaPorModerarLocal)
-            }))
+            }));
+            return null;
         };
+
+
 
 
     }
@@ -150,6 +151,10 @@ class Router extends Component {
 
 
     render() {
+
+        const separacion = this.separacionPorPaginas(this.state.lista)
+
+
         return (
             <BrowserRouter basename={process.env.PUBLIC_URL} >
                 <div className="container">
@@ -176,7 +181,7 @@ class Router extends Component {
                             )
                         }} />
 
-                        {this.paginas(this.state.listaSeparada)}
+                        {this.paginas(separacion)}
 
 
 
