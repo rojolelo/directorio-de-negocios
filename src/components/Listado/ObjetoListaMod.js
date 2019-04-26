@@ -12,7 +12,7 @@ class ObjetoListaMod extends Component {
     }
 
     aceptar = () => {
-        const { nombre, estado, ciudad, categoria, paginaweb, telefono1, telefono2, correo, descripcion, direccion } = this.props.objeto;
+        const { nombre, estado, ciudad, categoria, paginaweb, telefono1, telefono2, correo, descripcion, direccion, key } = this.props.objeto;
         const datos = {
             nombre,
             estado,
@@ -24,13 +24,16 @@ class ObjetoListaMod extends Component {
             paginaweb,
             descripcion,
             direccion,
+            key            
         }
+
+        
 
         this.props.aceptar(datos);
     }
 
     borrar = () => {
-        const { nombre, estado, ciudad, categoria, paginaweb, telefono1, telefono2, correo, descripcion, direccion } = this.props.objeto;
+        const { nombre, estado, ciudad, categoria, paginaweb, telefono1, telefono2, correo, descripcion, direccion, key } = this.props.objeto;
         const datos = {
             nombre,
             estado,
@@ -42,6 +45,7 @@ class ObjetoListaMod extends Component {
             paginaweb,
             descripcion,
             direccion,
+            key
         }
 
         this.props.borrar(datos);

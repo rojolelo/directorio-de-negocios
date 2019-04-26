@@ -1,15 +1,39 @@
 import React, { Component } from 'react';
 import ObjetoListaMod from './Listado/ObjetoListaMod';
+import firebase from "firebase";
+
+
 
 class Moderacion extends Component {
     state = {
-        clave: ""
+        clave: "",
+        lista : []        
+    }
+
+    componentWillMount() {
+        firebase.database().ref("moderacion").on("value", x => {
+            this.setState({
+                lista : x.val()
+            })
+        })
     }
 
     listaPorModerar = () => {
-        const lista = this.props.objeto;
+        let preLista = [];
+        let keysLista = [];
+        let lista = [];
 
+        if ((Boolean(this.state.lista))) {
+            preLista = this.state.lista;        
+            
+            if (typeof(preLista) === "object") {
+                keysLista = Object.keys(preLista);                
+            }
 
+            for (let i = 0; i < keysLista.length; i++) {
+                lista.push(preLista[keysLista[i]])
+            }
+    }
 
         if (lista.length === 0) {
             return (

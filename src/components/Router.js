@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import Listado from "./Listado";
@@ -8,6 +7,23 @@ import Add from "./Add";
 import BotonAdd from './BotonAdd';
 import Moderacion from "./Moderacion";
 import Navegacion from "./Navegacion";
+import firebase from "firebase";
+
+//FIREBASE INIT----------------
+var config = {
+    // PROTECTED INFORMATION
+    // MAKE SURE YOU ADD HERE YOUR FIREBASE CONFIG
+  };
+
+  firebase.initializeApp(config);
+
+const db = firebase.database().ref("directorio")
+const dbMod = firebase.database().ref("moderacion")
+
+
+//-------------------------------
+
+
 
 class Router extends Component {
     state = {
@@ -15,7 +31,22 @@ class Router extends Component {
         listaPorModerar: [],
     }
 
-    //PENDIENTE SEPARACION POR PAGINAS
+    
+    fromDBtoState = () => {
+        db.on("value", x => {
+            const directorio = x.val();
+            const ids = Object.keys(directorio);
+            let newState = [];
+            for (let i = 0; i< ids.length; i++) {
+                newState.push(directorio[ids[i]])
+            }
+            this.setState({
+                lista : newState
+            })  
+        });
+        
+        
+    }
 
     separacionPorPaginas = (datos) => {
         let prevState = [...datos]
@@ -81,72 +112,28 @@ class Router extends Component {
         )
     }
 
-    componentDidUpdate() {
-        localStorage.setItem("datos",
-            JSON.stringify(this.state.lista));
-        localStorage.setItem("datosPorModerar",
-            JSON.stringify(this.state.listaPorModerar));
-
-    }
+    
 
     componentDidMount() {
-
-
-
-        const listaLocal = localStorage.getItem("datos");
-        const listaPorModerarLocal = localStorage.getItem("datosPorModerar");
-
-        if (listaLocal && listaPorModerarLocal) {
-
-            this.setState((prevState, props) => ({
-                lista: JSON.parse(listaLocal),
-                listaPorModerar: JSON.parse(listaPorModerarLocal)
-            }));
-            return null;
-        };
-
-
-
-
+        this.fromDBtoState();
     }
 
     aceptar = (datos) => {
-        const { nombre, estado, ciudad, paginaweb, telefono1, telefono2, correo, descripcion, direccion } = datos;
-        const listaPorModerarNew = this.state.listaPorModerar.filter(objeto => {
-            return (
-                !(objeto.nombre === nombre
-                    && objeto.estado === estado
-                    && objeto.ciudad === ciudad
-                    && objeto.descripcion === descripcion
-                    && objeto.direccion === direccion)
-            )
-        })
-
-        this.setState((prevState, props) => ({
-            listaPorModerar: listaPorModerarNew,
-            lista: [...prevState.lista, datos]
-        }))
+        // SE AÑADEN A LA BASE DE DATOS
+        
+        db.push(datos, this.fromDBtoState());
+        
+        this.borrar(datos);
     }
 
-    borrar = (datos) => {
-        const { nombre, estado, ciudad, paginaweb, telefono1, telefono2, correo, descripcion, direccion } = datos;
-        const listaPorModerarNew = this.state.listaPorModerar.filter(objeto => {
-            return (
-                !(objeto.nombre === nombre
-                    && objeto.estado === estado
-                    && objeto.ciudad === ciudad
-                    && objeto.descripcion === descripcion
-                    && objeto.direccion === direccion)
-            )
-        })
-        this.setState((prevState, props) => ({ listaPorModerar: listaPorModerarNew }))
+    borrar = (datos) => {        
+        dbMod.child(datos.key).remove()        
     }
 
     add = (datos) => {
-
-        this.setState((prevState, props) => ({
-            listaPorModerar: [...prevState.listaPorModerar, datos]
-        }))
+        const keyValue = dbMod.push().key
+        datos["key"] = keyValue;
+        dbMod.child(keyValue).update(datos);
     }
 
 
@@ -198,5 +185,7 @@ class Router extends Component {
         );
     }
 }
+
+
 
 export default Router;

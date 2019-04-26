@@ -34,7 +34,7 @@ class Add extends Component {
             nombre,
             estado,
             ciudad,
-            categoria,
+            categoria: "",
             telefono1,
             telefono2,
             correo,
@@ -127,6 +127,12 @@ class Add extends Component {
                         <label className="control-label col-sm-2">Descripcion: </label>
                         <div className="col-sm-6">
                             <input className="form-control" ref={this.descripcionRef} type="text" placeholder="Ej: Venta de comida rápida" />
+                        </div>
+                    </div>
+                    <div className="formulario form-group row d-none">
+                        <label className="control-label col-sm-2">Categoria: </label>
+                        <div className="col-sm-6">
+                            <input className="form-control" ref={this.categoriaRef} type="text" placeholder="Electronicos/Comida" />
                         </div>
                     </div>
                     <div className="texto-add">
