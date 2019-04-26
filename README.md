@@ -9,11 +9,12 @@ La practicidad reside en que cada usuario es capaz de ingresar datos de una empr
 <br>
 - Futuros cambios: <br>
    - <strike>Id para cada objeto.</strike> - Listo <br>
-   - Actualizar o Reportar algun error en una empresa/negocio. <br>
-   - Filtro. <br>
+   - Boton para actualizar o reportar algun error en una empresa/negocio. <br>
+   - Filtro de búsqueda. <br>
    - Categorias. <br>
 
 - - - - - - - - - - - - - - - - - - - - - - - -
+<h2>English</h2>
 
 Webpage made with <strong>React</strong>. <br>
 Works with the database of Firebase. <br>
@@ -24,6 +25,6 @@ Its is practical because every user can add business to  the webpage; that data 
 <br>
 - Future changes: <br>
    - <strike>Id for every object.</strike> - Done  <br>
-   - Actualizar o Reportar algun error en una empresa/negocio. <br>
-   - Filtro. <br>
-   - Categorias. <br>
+   - Button to ask for update or report any error in a business. <br>
+   - Search Filter. <br>
+   - Categories. <br>
