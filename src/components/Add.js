@@ -77,7 +77,7 @@ class Add extends Component {
                     <div className="formulario form-group row ">
                         <label className="control-label col-sm-2">Nombre de la empresa: </label>
                         <div className="col">
-                            <input autoFocus className="form-control col-sm-10 form-control-lg" ref={this.nombreRef} type="text" placeholder="¿Como se llama tu empresa?" />
+                            <input autoFocus maxlength="35" className="form-control col-sm-10 form-control-lg" ref={this.nombreRef} type="text" placeholder="¿Como se llama tu empresa?" />
                         </div>
                     </div>
                     <div className="formulario form-group row ">
@@ -114,19 +114,19 @@ class Add extends Component {
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Ciudad: </label>
                         <div className="col-sm-6">
-                            <input className="form-control" ref={this.ciudadRef} type="text" placeholder="Ej: Caracas" />
+                            <input maxlength="15" className="form-control" ref={this.ciudadRef} type="text" placeholder="Ej: Caracas" />
                         </div>
                     </div>
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Direccion: </label>
                         <div className="col-sm-6">
-                            <input className="form-control" type="text" ref={this.direccionRef} placeholder="Direccion de la empresa" />
+                            <input maxlength="135" className="form-control" type="text" ref={this.direccionRef} placeholder="Direccion de la empresa" />
                         </div>
                     </div>
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Descripcion: </label>
                         <div className="col-sm-6">
-                            <input className="form-control" ref={this.descripcionRef} type="text" placeholder="Ej: Venta de comida rápida" />
+                            <input maxlength="135" className="form-control" ref={this.descripcionRef} type="text" placeholder="Ej: Venta de comida rápida" />
                         </div>
                     </div>
                     <div className="formulario form-group row d-none">
@@ -142,25 +142,25 @@ class Add extends Component {
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Telefono 1: </label>
                         <div className="col-sm-6">
-                            <input className="form-control" ref={this.telefono1Ref} type="text" placeholder="Telefono Principal" />
+                            <input maxlength="20" className="form-control" ref={this.telefono1Ref} type="text" placeholder="Telefono Principal" />
                         </div>
                     </div>
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Telefono 2: </label>
                         <div className="col-sm-6">
-                            <input className="form-control" ref={this.telefono2Ref} type="text" placeholder="Telefono Secundario" />
+                            <input maxlength="20" className="form-control" ref={this.telefono2Ref} type="text" placeholder="Telefono Secundario" />
                         </div>
                     </div>
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Correo</label>
                         <div className="col-sm-6">
-                            <input className="form-control" ref={this.correoRef} type="email" placeholder="Correo de la empresa" />
+                            <input maxlength="35" className="form-control" ref={this.correoRef} type="email" placeholder="Correo de la empresa" />
                         </div>
                     </div>
                     <div className="formulario form-group row">
                         <label className="control-label col-sm-2">Pagina web:</label>
                         <div className="col-sm-6">
-                            <input className="form-control" ref={this.paginawebRef} type="text" placeholder="Web de la empresa" />
+                            <input maxlength="65" className="form-control" ref={this.paginawebRef} type="text" placeholder="Web de la empresa" />
                         </div>
                     </div>
                     <div className="col justify-content-center">

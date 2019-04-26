@@ -1,21 +1,71 @@
 import React, { Component } from 'react';
 import ObjetoListaMod from './Listado/ObjetoListaMod';
 import firebase from "firebase";
-
+import Swal from "sweetalert2";
 
 
 class Moderacion extends Component {
     state = {
         clave: "",
-        lista : []        
+        lista: [],
+        email: ""
     }
+
+    emailRef = React.createRef();
+    passwordRef = React.createRef();
 
     componentWillMount() {
         firebase.database().ref("moderacion").on("value", x => {
             this.setState({
-                lista : x.val()
+                lista: x.val()
             })
         })
+    }
+
+    iniciarSesion = (e) => {
+        e.preventDefault()
+        const email = this.emailRef.current.value;
+        const password = this.passwordRef.current.value;
+
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .catch(error => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                if (errorCode === "auth/wrong-password") {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: 'Wrong Password',
+                    });
+                } else if (errorCode === "auth/user-not-found") {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: "Are you sure you're and admin? :)",
+                    });
+                } else {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: errorMessage,
+                    });
+                    console.log(error)
+                }
+
+            })
+            .then(result => {
+                if (result) {
+                    this.setState({
+                        email: result.user.email
+                    })
+                }
+            })
+    }
+
+    logout = () => {
+        firebase.auth().signOut()
+        document.location.reload()
     }
 
     listaPorModerar = () => {
@@ -24,16 +74,16 @@ class Moderacion extends Component {
         let lista = [];
 
         if ((Boolean(this.state.lista))) {
-            preLista = this.state.lista;        
-            
-            if (typeof(preLista) === "object") {
-                keysLista = Object.keys(preLista);                
+            preLista = this.state.lista;
+
+            if (typeof (preLista) === "object") {
+                keysLista = Object.keys(preLista);
             }
 
             for (let i = 0; i < keysLista.length; i++) {
                 lista.push(preLista[keysLista[i]])
             }
-    }
+        }
 
         if (lista.length === 0) {
             return (
@@ -46,7 +96,6 @@ class Moderacion extends Component {
                 </React.Fragment>
             )
         };
-
 
 
         return (
@@ -65,15 +114,41 @@ class Moderacion extends Component {
 
     render() {
 
-        if (this.state.clave !== "1234") return (
-            <React.Fragment>
-                <h2>Inserte Clave</h2>
-                <input type="text" placeholder="password" onChange={e => {
-                    this.setState({
-                        clave: e.target.value
-                    })
-                }} />
-            </React.Fragment>)
+        const logged = Boolean(firebase.auth().currentUser);
+        console.log("Logged", logged)
+        if (logged === false) {
+            return (
+                <React.Fragment>
+                    <div><h2>Insert your Email and Password</h2></div>
+                    <div><h4>You need log in in order to moderate</h4></div>
+                    <form onSubmit={this.iniciarSesion}>
+                        <div><label>Email</label><input className="form-control" type="text" ref={this.emailRef} placeholder="Email" /></div>
+                        <div><label>Password</label><input className="form-control" type="text" ref={this.passwordRef} placeholder="Password" /></div>
+                        <div><button className="btn btn-primary" type="submit" >Iniciar Sesion</button></div>
+                    </form>
+                </React.Fragment>
+            )
+        }
+
+        if ((this.state.clave !== "1234")) {
+            return (
+                <React.Fragment>
+                    <div><h2>Insert MPass </h2></div>
+                    <label>Mpassword</label>
+                    <div>
+                        <input type="text" placeholder="password" onChange={e => {
+                            this.setState({
+                                clave: e.target.value
+                            })
+                        }} />
+                    </div>
+                    <div>
+                        <button type="button" className="btn btn-warning" onClick={this.logout}>Logout</button>
+                    </div>
+                </React.Fragment>)
+        }
+
+
 
         return (
             <React.Fragment>
@@ -85,6 +160,7 @@ class Moderacion extends Component {
                         {this.listaPorModerar()}
                     </tbody>
                 </table>
+                <button type="button" onClick={this.logout}>Logout</button>
             </React.Fragment >
         );
     }

@@ -46,12 +46,14 @@ class ObjetoLista extends Component {
     }
 
     render() {
-        const { nombre, estado, ciudad, categoria } = this.props.objeto;
+        const { nombre, ciudad, categoria } = this.props.objeto;
+        let { estado } = this.props.objeto;
+        let estadoUpper = estado.slice(0, 1).toUpperCase() + estado.slice(1);
         return (
             <React.Fragment>
                 <tr className="objeto">
                     <td className="objeto-nombre">{nombre} </td>
-                    <td className="objeto-estado">{estado}</td>
+                    <td className="objeto-estado">{estadoUpper}</td>
                     <td className="objeto-ciudad">{ciudad}</td>
                     <td className="objeto-categoria">{categoria}</td>
                     <td className="objeto-informacion">

@@ -11,14 +11,15 @@ import firebase from "firebase";
 
 //FIREBASE INIT----------------
 var config = {
-    // PROTECTED INFORMATION
-    // MAKE SURE YOU ADD HERE YOUR FIREBASE CONFIG
-  };
+    //PROTECTED INFORMATION
+    // FOR YOU PROJECT USE HERE YOUR OWN FIREBASE DATABASE
+};
 
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 const db = firebase.database().ref("directorio")
 const dbMod = firebase.database().ref("moderacion")
+
 
 
 //-------------------------------
@@ -29,61 +30,86 @@ class Router extends Component {
     state = {
         lista: [],
         listaPorModerar: [],
+        loading: true,
     }
 
-    
+
     fromDBtoState = () => {
+        //EVERYTIME THERE A UPDATE IT SETS LOADING TO TRUE
+        // ITS ON ANOTHER FUNCTION IN ORDER TO AVOID 
+        // this.setState NOT WORKING PROPERLY
+        this.loading()
         db.on("value", x => {
             const directorio = x.val();
             const ids = Object.keys(directorio);
             let newState = [];
-            for (let i = 0; i< ids.length; i++) {
+            for (let i = 0; i < ids.length; i++) {
                 newState.push(directorio[ids[i]])
             }
             this.setState({
-                lista : newState
-            })  
-        });
-        
-        
+                lista: newState,
+                loading: false
+            })
+        })
+    }
+
+    loading = () => {
+        this.setState({
+            loading: true
+        })
     }
 
     separacionPorPaginas = (datos) => {
-        let prevState = [...datos]
-
+        let prevState = [...datos];
 
         let separacion = [];
         let subSeparacion = [];
-
 
         const objetosPorPagina = 10;
 
         while (prevState.length >= 1) {
             subSeparacion = prevState.splice(0, objetosPorPagina)
             separacion.push(subSeparacion);
-
         }
-
 
         if (separacion.length !== 0) {
             return separacion
-        };
+        } else {
+            return []
+        }
 
     }
 
+    listado = (separacion) => {
+
+        if (Boolean(separacion)) {
+            if (this.state.loading) {
+                return (
+                    <React.Fragment>
+                        <h3 className="text-center">Cargando...</h3>
+                    </React.Fragment>
+                )
+            } else if (this.state.lista.length === 0) {
+                console.log("state.length = 0")
+                return (
+                    <React.Fragment>
+                        <BotonAdd />
+                        <h3>No hay negocios para mostrar</h3>
+                    </React.Fragment>)
+            } else {
+                return (
+                    this.paginas(separacion)
+                )
+            }
+        }
+    }
+
     paginas = (lista) => {
-        //LISTA es el State separado.
+        //LISTA es el State separado (separacion).
 
         if (!Boolean(lista)) return null;
         const paginas = [...lista];
 
-        if (paginas.length === 0) return (
-
-            <Route exact path={"/"} render={() => {
-                return (<BotonAdd />)
-            }} />
-
-        );
 
         return (
             <React.Fragment>
@@ -95,6 +121,7 @@ class Router extends Component {
                         } else {
                             i += 1;
                         };
+
                         return (
                             <Route key={i} exact path={`/${i}`} render={() => {
                                 return (
@@ -112,35 +139,40 @@ class Router extends Component {
         )
     }
 
-    
-
-    componentDidMount() {
-        this.fromDBtoState();
+    componentWillMount() {
+        this.fromDBtoState()
     }
 
+    // BOTONES -------------------
     aceptar = (datos) => {
         // SE AÑADEN A LA BASE DE DATOS
-        
+        // ADDED TO DATABASE
+
         db.push(datos, this.fromDBtoState());
-        
+
         this.borrar(datos);
     }
 
-    borrar = (datos) => {        
-        dbMod.child(datos.key).remove()        
+    borrar = (datos) => {
+        // REMOVED FROM DATABASE
+        dbMod.child(datos.key).remove()
     }
 
     add = (datos) => {
+        // ADDED TO DATABASE MODERATION LIST
         const keyValue = dbMod.push().key
         datos["key"] = keyValue;
         dbMod.child(keyValue).update(datos);
     }
-
+    // ------------------ BOTONES
 
     render() {
 
-        const separacion = this.separacionPorPaginas(this.state.lista)
+        let separacion = [];
 
+        if (Boolean(this.state.lista)) {
+            separacion = this.separacionPorPaginas(this.state.lista)
+        }
 
 
 
@@ -149,10 +181,7 @@ class Router extends Component {
                 <div className="container">
                     <Header />
 
-
                     <Switch>
-
-
 
                         <Route exact path={"/add"} render={() => {
                             //AÑADIR POST
@@ -170,11 +199,7 @@ class Router extends Component {
                             )
                         }} />
 
-                        {
-                            (separacion) ? (separacion.length === 0 ? <BotonAdd /> : this.paginas(separacion)) : <BotonAdd />
-                        }
-
-
+                        {this.listado(separacion)}
 
                     </Switch>
 
@@ -185,7 +210,5 @@ class Router extends Component {
         );
     }
 }
-
-
 
 export default Router;
