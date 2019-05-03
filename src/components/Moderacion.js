@@ -64,8 +64,9 @@ class Moderacion extends Component {
     }
 
     logout = () => {
+        const mainAddress = window.location.href.replace("/listadomoderacion", "");
         firebase.auth().signOut()
-        document.location.reload()
+        document.location.assign(mainAddress)
     }
 
     listaPorModerar = () => {
@@ -113,6 +114,8 @@ class Moderacion extends Component {
     }
 
     render() {
+
+
 
         const logged = Boolean(firebase.auth().currentUser);
         console.log("Logged", logged)
