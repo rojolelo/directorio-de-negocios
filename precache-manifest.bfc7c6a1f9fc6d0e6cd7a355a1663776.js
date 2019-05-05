@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/directorio-de-negocios/static/css/main.be1b60e9.chunk.css"
   },
   {
-    "revision": "ce51345ec52ce0f3c1463ed5c00e86fd",
+    "revision": "ba476c9d752cf7e46416030e212d7504",
     "url": "/directorio-de-negocios/index.html"
   }
 ];
