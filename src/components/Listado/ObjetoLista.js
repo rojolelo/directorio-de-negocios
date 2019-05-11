@@ -1,20 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class ObjetoLista extends Component {
     state = {
         mostrarInfo: false
-    }
+    };
 
     mostrarInfo = () => {
         this.setState((prevState, props) => ({
             mostrarInfo: !prevState.mostrarInfo
-        }))
-    }
+        }));
+    };
 
     infoExtra = () => {
-
         //DATOS SE OBTIENEN DE UN PROPS.OBJETO
-        const { nombre, paginaweb, telefono1, telefono2, correo, descripcion, direccion } = this.props.objeto;
+        const {
+            nombre,
+            paginaweb,
+            telefono1,
+            telefono2,
+            correo,
+            descripcion,
+            direccion
+        } = this.props.objeto;
 
         if (!this.state.mostrarInfo) return null;
 
@@ -28,22 +35,22 @@ class ObjetoLista extends Component {
                 </td>
                 <td className="info2" colSpan="2">
                     <div className="info-div-2">
-                        <p>Telefono 1: {telefono1} </p>
-                        <p>Telefono 2: {telefono2}</p>
-                        <p>Correo: {correo}</p>
+                        <p>Phone Number 1: {telefono1} </p>
+                        <p>Phone Number 2: {telefono2}</p>
+                        <p>Email: {correo}</p>
                     </div>
                 </td>
                 <td className="info3" colSpan="2">
                     <div className="info-div-3">
-                        <p>Descripcion: </p>
+                        <p>Description: </p>
                         <p>{descripcion} </p>
-                        <p>Direccion: </p>
+                        <p>Address: </p>
                         <p>{direccion} </p>
                     </div>
                 </td>
             </tr>
-        )
-    }
+        );
+    };
 
     render() {
         const { nombre, ciudad, categoria } = this.props.objeto;
@@ -57,7 +64,12 @@ class ObjetoLista extends Component {
                     <td className="objeto-ciudad">{ciudad}</td>
                     <td className="objeto-categoria">{categoria}</td>
                     <td className="objeto-informacion">
-                        <button className="objeto-button" onClick={this.mostrarInfo}>Info</button>
+                        <button
+                            className="objeto-button"
+                            onClick={this.mostrarInfo}
+                        >
+                            Info
+                        </button>
                     </td>
                 </tr>
                 {this.infoExtra()}
@@ -65,6 +77,5 @@ class ObjetoLista extends Component {
         );
     }
 }
-
 
 export default ObjetoLista;

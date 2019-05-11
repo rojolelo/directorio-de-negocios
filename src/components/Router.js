@@ -8,10 +8,11 @@ import BotonAdd from "./BotonAdd";
 import Moderacion from "./Moderacion";
 import Navegacion from "./Navegacion";
 import firebase from "firebase";
+import Search from "./Search";
 
 //FIREBASE INIT----------------
 var config = {
-    // PROTECTED INFORMATION
+    // USE HERE YOUR OWN FIREBASE CONFIG
 };
 
 firebase.initializeApp(config);
@@ -25,7 +26,8 @@ class Router extends Component {
     state = {
         lista: [],
         listaPorModerar: [],
-        loading: true
+        loading: true,
+        search: ""
     };
 
     fromDBtoState = () => {
@@ -78,15 +80,21 @@ class Router extends Component {
             if (this.state.loading) {
                 return (
                     <React.Fragment>
-                        <h3 className="text-center">Cargando...</h3>
+                        <h3 className="text-center">Loading...</h3>
                     </React.Fragment>
                 );
-            } else if (this.state.lista.length === 0) {
+            } else if (separacion.length === 0) {
                 console.log("state.length = 0");
                 return (
                     <React.Fragment>
                         <BotonAdd />
-                        <h3>No hay negocios para mostrar</h3>
+
+                        <Search
+                            search={this.search}
+                            currentValue={this.state.search}
+                        />
+
+                        <h3>There are not business to show</h3>
                     </React.Fragment>
                 );
             } else {
@@ -119,6 +127,11 @@ class Router extends Component {
                                 return (
                                     <React.Fragment>
                                         <BotonAdd />
+
+                                        <Search
+                                            search={this.search}
+                                            currentValue={this.state.search}
+                                        />
                                         <Listado lista={pagina} />
                                         <Navegacion
                                             paginaActual={i}
@@ -161,11 +174,37 @@ class Router extends Component {
     };
     // ------------------ BOTONES
 
+    //Search-----------------
+    search = string => {
+        this.setState({
+            search: string
+        });
+    };
+    //-----------------Search
+
     render() {
         let separacion = [];
-
+        let newLista = [];
         if (Boolean(this.state.lista)) {
-            separacion = this.separacionPorPaginas(this.state.lista);
+            if (Boolean(this.state.search) && this.state.search !== "") {
+                const regex = new RegExp(this.state.search.toLowerCase());
+                newLista = this.state.lista.filter(x => {
+                    return (
+                        regex.test(x.nombre.toLowerCase()) ||
+                        regex.test(x.estado.toLowerCase()) ||
+                        regex.test(x.ciudad.toLowerCase()) ||
+                        // regex.test(x.categoria.toLowerCase()) ||
+                        regex.test(x.descripcion.toLowerCase()) ||
+                        regex.test(x.correo.toLowerCase()) ||
+                        regex.test(x.paginaweb.toLowerCase()) ||
+                        regex.test(x.direccion.toLowerCase())
+                    );
+                });
+            } else {
+                newLista = this.state.lista;
+            }
+
+            separacion = this.separacionPorPaginas(newLista);
         }
 
         return (

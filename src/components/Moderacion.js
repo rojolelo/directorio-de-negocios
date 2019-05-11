@@ -95,7 +95,7 @@ class Moderacion extends Component {
             return (
                 <React.Fragment>
                     <tr>
-                        <td>No hay nada para moderar</td>
+                        <td>There is nothing to show</td>
                     </tr>
                 </React.Fragment>
             );
@@ -150,7 +150,7 @@ class Moderacion extends Component {
                         </div>
                         <div>
                             <button className="btn btn-primary" type="submit">
-                                Iniciar Sesion
+                                Log in
                             </button>
                         </div>
                     </form>
@@ -178,7 +178,7 @@ class Moderacion extends Component {
 
         return (
             <React.Fragment>
-                <h2 className="titulo-moderacion">Moderacion</h2>
+                <h2 className="titulo-moderacion">Moderation</h2>
 
                 <table className="table table-bordered table-striped">
                     <tbody>{this.listaPorModerar()}</tbody>
